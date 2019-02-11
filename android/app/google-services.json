@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "77745089382",
+    "firebase_url": "https://shaftesbury-fringe-2018.firebaseio.com",
+    "project_id": "shaftesbury-fringe-2018",
+    "storage_bucket": "shaftesbury-fringe-2018.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77745089382:android:3ad6d3860023bd67",
+        "android_client_info": {
+          "package_name": "uk.co.shaftesburyfringe.fringeprogramme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "77745089382-ka4c1h6t703cks39pv3v3i1m76k8df82.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7jgCUrwY8-4r5kgDTnJ0cLhYhXfQmyXo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77745089382:android:829c3e94e9e86490",
+        "android_client_info": {
+          "package_name": "uk.co.shaftesburyfringe.shaftesburyfringe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "77745089382-ka4c1h6t703cks39pv3v3i1m76k8df82.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7jgCUrwY8-4r5kgDTnJ0cLhYhXfQmyXo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
