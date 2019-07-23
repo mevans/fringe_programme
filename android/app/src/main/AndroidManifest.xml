@@ -14,7 +14,7 @@
          FlutterApplication and put your custom class here. -->
     <application
             android:name="io.flutter.app.FlutterApplication"
-            android:label="fringe_programme"
+            android:label="Shaftesbury Fringe 2019"
             android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
                    android:value="AIzaSyArSJuvDPoQYprxy-zDM1UQDari70a3a6w"></meta-data>

@@ -8,8 +8,8 @@ import 'package:fringe_programme/programme_helper.dart';
 
 class EventListItem extends StatelessWidget {
   final Event event;
-
-  EventListItem(this.event);
+  final bool over;
+  EventListItem(this.event, {this.over = false});
 
   @override
   Widget build(BuildContext context) {
@@ -99,32 +99,35 @@ class EventListItem extends StatelessWidget {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (ctx) => EventPage(event)));
       },
-      child: Padding(
-        padding: const EdgeInsets.only(left:8, right: 8, top: 8, bottom: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            image,
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    genre,
-                    SizedBox(height: 3),
-                    title,
-                    performer,
-                    description,
-                    SizedBox(height: 7),
-                    time,
-                    SizedBox(height: 3),
-                    venue,
-                  ],
+      child: Container(
+        foregroundDecoration: over ? BoxDecoration(color: Colors.white70) : null,
+        child: Padding(
+          padding: const EdgeInsets.only(left:8, right: 8, top: 8, bottom: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              image,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      genre,
+                      SizedBox(height: 3),
+                      title,
+                      performer,
+                      description,
+                      SizedBox(height: 7),
+                      time,
+                      SizedBox(height: 3),
+                      venue,
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

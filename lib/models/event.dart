@@ -39,13 +39,13 @@ class Event {
             .toString()
             .replaceAll("https://", "")
             .replaceAll("http://", ""),
-        day = (document["day"] as DateTime),
-        startTime = timeOnDate((document["day"] as DateTime),
-            (document["start_time"] as DateTime)),
-        endTime = timeOnDate((document["day"] as DateTime),
-            (document["end_time"] as DateTime)),
+        day = (document["day"] as Timestamp).toDate(),
+        startTime = timeOnDate((document["day"] as Timestamp).toDate(),
+            (document["start_time"] as Timestamp).toDate()),
+        endTime = timeOnDate((document["day"] as Timestamp).toDate(),
+            (document["end_time"] as Timestamp).toDate()),
         ageRestriction = document["age_restriction"],
-        entryDetails = document["entry_details"],
+        entryDetails = document["entry_details"].toString(),
         entryType = document["entry_type"],
         instagram = document["instagram"]
             .toString()

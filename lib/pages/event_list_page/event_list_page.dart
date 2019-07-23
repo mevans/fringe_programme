@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,20 +38,14 @@ class EventListPageState extends State<EventListPage>
 
   EventListPageState() {
     _loadEvents = firestore.collection("events2019").getDocuments();
+    print("LOADING");
   }
 
   @override
   void initState() {
     super.initState();
-    print("init");
     controller = TabController(length: 3, vsync: this);
-    DateTime now = DateTime(2019, 7, 6, 12);
-    if (now.day == 6 && now.month == 7 && now.year == 2019) {
-      controller.animateTo(1);
-    }
-    if (now.day == 7 && now.month == 7 && now.year == 2019) {
-      controller.animateTo(2);
-    }
+//    controller.animateTo(EventPageModel.of(context).dateTime.weekday - 5);
   }
 
   @override
@@ -61,10 +56,13 @@ class EventListPageState extends State<EventListPage>
 
   @override
   Widget build(BuildContext context) {
+//    EventPageModel model = EventPageModel.of(context);
+//    print(model.dateTime);
     return ScopedModel<EventPageModel>(
       model: widget.eventFilter,
       child: ScopedModelDescendant<EventPageModel>(
         builder: (ctx, child, model) {
+          print(TimeOfDay.fromDateTime(model.dateTime));
           textEditingController.text = model.searchTerm;
           return Scaffold(
             key: _scaffoldKey,
@@ -72,22 +70,28 @@ class EventListPageState extends State<EventListPage>
             endDrawer: EventFilterDrawer(model),
             body: FutureBuilder(
               builder: (ctx, snapshot) {
-                if (!snapshot.hasData)
-                  return Center(child: CupertinoActivityIndicator());
+                if (!snapshot.hasData) return Center(child: CupertinoActivityIndicator());
                 List<DocumentSnapshot> eventSnapshots = snapshot.data.documents;
                 List<Event> events = eventSnapshots
                     .map((ds) => Event.fromDocument(ds))
                     .toList()
                       ..sort((e1, e2) => e1.startTime.compareTo(e2.startTime));
                 events = model.applyFilter(events);
-
+                if (model.searchTerm.isNotEmpty && events.length != 0) {
+                  if (events.where((e) => e.day == model.dateTime).length == 0) {
+                    controller.index = events.firstWhere((e) => e.startTime.isAfter(model.dateTime)).day.day-5;
+                  }
+                }
                 return events.length != 0
                     ? TabBarView(
                         controller: controller,
                         children: <Widget>[
-                          EventList(events, DateTime(2019, 7, 5, 12)),
-                          EventList(events, DateTime(2019, 7, 6, 12)),
-                          EventList(events, DateTime(2019, 7, 7, 12)),
+                          EventList(
+                              events, DateTime(2019, 7, 5), model.dateTime),
+                          EventList(
+                              events, DateTime(2019, 7, 6), model.dateTime),
+                          EventList(
+                              events, DateTime(2019, 7, 7), model.dateTime),
                         ],
                       )
                     : Column(

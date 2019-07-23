@@ -84,6 +84,10 @@ class PlannerPageState extends State<PlannerPage> with AutomaticKeepAliveClientM
 }
 
 class NotificationDialog extends StatefulWidget {
+  final DateTime initialTime;
+  final DateTime eventTime;
+  NotificationDialog({this.initialTime, this.eventTime});
+
   @override
   _NotificationDialogState createState() => _NotificationDialogState();
 }
@@ -92,12 +96,34 @@ class _NotificationDialogState extends State<NotificationDialog> {
   int selected = 0;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.initialTime != null) {
+      if (widget.eventTime
+          .difference(widget.initialTime)
+          .inMinutes == 15) selected = 1;
+      if (widget.eventTime
+          .difference(widget.initialTime)
+          .inMinutes == 30) selected = 2;
+    }
+  }
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text("Notify Me"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
+//          RadioListTile(
+//            title: Text("3 seconds (Testing purposes)"),
+//            value: -1,
+//            groupValue: selected,
+//            onChanged: (b) {
+//              setState(() {
+//                selected=b;
+//              });
+//            },
+//          ),
           RadioListTile(
             value: 0,
             groupValue: selected,
@@ -131,10 +157,16 @@ class _NotificationDialogState extends State<NotificationDialog> {
         ],
       ),
       actions: <Widget>[
-        FlatButton(onPressed: () {}, child: Text("Cancel")),
+        FlatButton(onPressed: () {
+          Navigator.pop(context);
+        }, child: Text("Cancel")),
         FlatButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              int ret = 0;
+              if (selected == 1) ret = widget.eventTime.subtract(Duration(minutes: 15)).millisecondsSinceEpoch;
+              if (selected == 2) ret = widget.eventTime.subtract(Duration(minutes: 30)).millisecondsSinceEpoch;
+              if (selected == -1) ret = DateTime.now().add(Duration(seconds: 5)).millisecondsSinceEpoch;
+              Navigator.pop(context, ret);
             },
             child: Text("Ok"))
       ],

@@ -24,7 +24,21 @@ class _GenrePickerDialogState extends State<GenrePickerDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Genres"),
+      contentPadding: EdgeInsets.only(top: 8),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text("Genres"),
+          FlatButton(
+            child: Text("Clear All"),
+            onPressed: () {
+              setState(() {
+                genres.forEach((s, b) => genres[s] = false);
+              });
+            },
+          )
+        ],
+      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -46,8 +60,10 @@ class _GenrePickerDialogState extends State<GenrePickerDialog> {
                       width: 10,
                     ),
                     Expanded(
-                        child: Text(
-                            "${s.substring(0, 1).toUpperCase()}${s.substring(1)}")),
+                      child: Text(
+                        "${s.substring(0, 1).toUpperCase()}${s.substring(1)}",
+                      ),
+                    ),
                   ],
                 ),
                 value: genres[s],

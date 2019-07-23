@@ -5,7 +5,9 @@ import 'package:fringe_programme/database_helper.dart';
 import 'package:fringe_programme/fringe_programme_font_icons.dart';
 import 'package:fringe_programme/models/event.dart';
 import 'package:fringe_programme/models/venue.dart';
+import 'package:fringe_programme/pages/map_page/venue_bottom_modal.dart';
 import 'package:fringe_programme/programme_helper.dart';
+import 'package:fringe_programme/widgets/flutter_linkify.dart';
 import 'package:fringe_programme/widgets/fringe_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
@@ -38,9 +40,11 @@ class EventPageState extends State<EventPage> {
       int minutes = numberOfMinutes - (hours * 60);
       return "${(numberOfMinutes.toDouble() / 60).floor()} hour${hours > 1 ? "s" : ""}${minutes > 0 ? " $minutes minutes" : ""}";
     } else {
-      return "$numberOfMinutes minutes}";
+      return "$numberOfMinutes minutes";
     }
   }
+
+  final _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +77,7 @@ class EventPageState extends State<EventPage> {
           "Time",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        Text(["Friday", "Saturday", "Sunday"][widget.event.day.weekday-5]),
         Text(
           "${TimeOfDay.fromDateTime(widget.event.startTime).format(context)} ${!Platform.isIOS ? widget.event.startTime.hour < 12 ? "AM" : "PM" : ""} - ${TimeOfDay.fromDateTime(widget.event.endTime).format(context)} ${!Platform.isIOS ? widget.event.endTime.hour < 12 ? "AM" : "PM" : ""}\n(${formatMinutes(widget.event.endTime.difference(widget.event.startTime).inMinutes)})",
           textAlign: TextAlign.center,
@@ -90,67 +95,43 @@ class EventPageState extends State<EventPage> {
           textAlign: TextAlign.center,
         ),
         widget.event.entryDetails.isNotEmpty
-            ? Text(
-                widget.event.entryDetails,
+            ? Linkify(
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 10),
+                text: widget.event.entryDetails,
+                style: TextStyle(fontSize: 10, color: Colors.black87),
+                linkStyle: TextStyle(color: Colors.blue, fontSize: 10),
+                onOpen: (s) async{
+                  if (!s.startsWith("http")) s= "https://$s";
+                  if (await canLaunch(s)) {
+                    launch(s);
+                  }
+                },
               )
             : Container()
       ],
     );
-    var venue = Row(
-      children: <Widget>[
-        IconButton(
-          icon: Icon(Icons.navigation),
-          onPressed: () async {
-            Venue v = ProgrammeHelper.getVenueFromName(widget.event.venue);
-            if (await canLaunch(
-                "https://www.google.com/maps/search/?api=1&query=${v.location.latitude},${v.location.longitude}")) {
-              launch(
-                  "https://www.google.com/maps/search/?api=1&query=${v.location.latitude},${v.location.longitude}");
-            } else if (await canLaunch(
-                "geo:${v.location.latitude},${v.location.longitude}")) {
-              launch("geo:${v.location.latitude},${v.location.longitude}");
-            } else if (await canLaunch(
-                "http://maps.apple.com/?ll=${v.location.latitude},${v.location.longitude}")) {
-              launch(
-                  "http://maps.apple.com/?ll=${v.location.latitude},${v.location.longitude}");
-            } else {
-              showDialog(
-                  context: context,
-                  builder: (ctx) {
-                    return AlertDialog(
-                      title: Text("Can't Navigate"),
-                      content: Text("No maps application found"),
-                      actions: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("Ok"),
-                        )
-                      ],
-                    );
-                  });
-            }
-          },
-        ),
-        Expanded(
-          child: Column(
-            children: <Widget>[
-              Text(
-                "Venue",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                widget.event.venue,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        )
-      ],
-    );
+    var venue = InkWell(
+        onTap: () {
+          Venue v = ProgrammeHelper.getVenueFromName(widget.event.venue);
+          showModalBottomSheet(
+              context: context, builder: (ctx) => VenuePage(venue: v), );
+        },
+        child: Column(
+          children: <Widget>[
+            Text(
+              "Venue",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              widget.event.venue,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Icon(Icons.launch)
+          ],
+        ));
     var entry = Column(
       children: <Widget>[
         Text(
@@ -164,6 +145,7 @@ class EventPageState extends State<EventPage> {
       ],
     );
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Theme.of(context).accentColor,
         flexibleSpace: FringeAppBar("Event"),
@@ -172,7 +154,8 @@ class EventPageState extends State<EventPage> {
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () {
-              Share.share("Omg I'm sharing ${widget.event.title}");
+              Share.share(ProgrammeHelper.getShareText(
+                  widget.event.title, widget.event.day));
             },
           ),
           Builder(
@@ -267,6 +250,7 @@ class EventPageState extends State<EventPage> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

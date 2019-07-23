@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fringe_programme/pages/event_list_page/event_page_filter.dart';
 import 'package:fringe_programme/pages/event_list_page/genre_picker_dialog.dart';
+import 'package:fringe_programme/pages/event_list_page/venue_picker_dialog.dart';
 import 'package:fringe_programme/programme_helper.dart';
 
 class EventFilterDrawer extends StatefulWidget {
@@ -24,6 +25,8 @@ class _EventFilterDrawerState extends State<EventFilterDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.model.venueIDS.length);
+    print(ProgrammeHelper.allVenues.length);
     return Drawer(
       child: DropdownButtonHideUnderline(
         child: ListView(
@@ -59,15 +62,13 @@ class _EventFilterDrawerState extends State<EventFilterDrawer> {
               leading: Icon(Icons.beach_access),
               title: Text("Genre"),
               subtitle: Text(widget.model.genres.length !=
-                  ProgrammeHelper.genres.keys.length
+                      ProgrammeHelper.genres.keys.length
                   ? widget.model.genres
-                  .map((s) =>
-              "${s.substring(0, 1).toUpperCase()}${s.substring(1)}")
-                  .join(", ")
+                      .map((s) =>
+                          "${s.substring(0, 1).toUpperCase()}${s.substring(1)}")
+                      .join(", ")
                   : "Any"),
-              trailing: Icon(
-                  Icons.arrow_drop_down
-              ),
+              trailing: Icon(Icons.arrow_drop_down),
               onTap: () {
                 showDialog(
                     context: context,
@@ -97,14 +98,14 @@ class _EventFilterDrawerState extends State<EventFilterDrawer> {
                 ]
                     .map(
                       (s) => DropdownMenuItem(
-                    child: Text(
-                      s,
-                      style: TextStyle(
-                          fontSize: 13, color: Color(0xaa000000)),
-                    ),
-                    value: s,
-                  ),
-                )
+                            child: Text(
+                              s,
+                              style: TextStyle(
+                                  fontSize: 13, color: Color(0xaa000000)),
+                            ),
+                            value: s,
+                          ),
+                    )
                     .toList(),
                 onChanged: (s) {
                   widget.model.updateModel(entryType: s);
@@ -131,14 +132,14 @@ class _EventFilterDrawerState extends State<EventFilterDrawer> {
                 ]
                     .map(
                       (s) => DropdownMenuItem(
-                    child: Text(
-                      s,
-                      style: TextStyle(
-                          fontSize: 13, color: Color(0xaa000000)),
-                    ),
-                    value: s,
-                  ),
-                )
+                            child: Text(
+                              s,
+                              style: TextStyle(
+                                  fontSize: 13, color: Color(0xaa000000)),
+                            ),
+                            value: s,
+                          ),
+                    )
                     .toList(),
                 onChanged: (s) {
                   widget.model.updateModel(ageRestriction: s);
@@ -146,9 +147,41 @@ class _EventFilterDrawerState extends State<EventFilterDrawer> {
                 value: widget.model.ageRestriction,
               ),
             ),
+            ListTile(
+              leading: Icon(Icons.account_balance),
+              title: Text("Venue"),
+              subtitle: Text(widget.model.venueIDS.length !=
+                      ProgrammeHelper.allVenues.length
+                  ? "${widget.model.venueIDS.length} venues selected"
+                  : "Any"),
+              trailing: Icon(Icons.arrow_drop_down),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (ctx) {
+                      return VenuePickerDialog(widget.model.venueIDS);
+                    }).then((d) {
+                  print(d);
+                  if (d != null) widget.model.updateModel(venueIDS: d);
+                });
+              },
+            ),
+//            ListTile(
+//              title: Text("Select date and time for testing"),
+//              onTap: () {
+//                showDatePicker(context: context, initialDate: DateTime(2019, 7, 6), firstDate: DateTime(2019, 7, 5), lastDate: DateTime(2019, 7, 7)).then((ds) {
+//                  showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(widget.model.dateTime)).then((tod) {
+//                    widget.model.updateModel(dateTime: DateTime(ds.year, ds.month, ds.day, tod.hour, tod.minute));
+//                    Navigator.pop(context);
+//                  });
+//                });
+//              },
+//              subtitle: Text(widget.model.dateTime.toString()),
+//            ),
             SizedBox(
               height: 20,
             ),
+
             Align(
               child: FlatButton(
                 onPressed: () {

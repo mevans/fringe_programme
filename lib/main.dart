@@ -1,22 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fringe_programme/models/event.dart';
 import 'package:fringe_programme/pages/bottom_navigation/bottom_navigation.dart';
 import 'package:fringe_programme/pages/event_list_page/event_list_page.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fringe_programme/database_helper.dart';
+import 'package:fringe_programme/pages/event_page/event_page.dart';
+import 'package:fringe_programme/widgets/home_page.dart';
 
-/** TODO:
- *  Venues
- *  Parking Dialog
- *  Landing page
- *  Get me there button?
- *  Notifications
- */
-
-void main() {
+void main() async {
+  await Firestore.instance.settings(timestampsInSnapshotsEnabled: true, persistenceEnabled: true);
   runApp(
     MaterialApp(
       title: "Shaftesbury Fringe 2019",
-//      home: new BottomNavigationManager(),
-      home: LandingPage(),
+      home: HomePage(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primaryColor: Color(0xffb30075),
@@ -49,18 +47,14 @@ class LandingPage extends StatelessWidget {
                         "Shaftesbury",
                         style: TextStyle(
                           fontSize: 40,
-                          color: Theme
-                              .of(context)
-                              .primaryColor,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                       Text(
                         "Fringe",
                         style: TextStyle(
                           fontSize: 40,
-                          color: Theme
-                              .of(context)
-                              .primaryColor,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                       SizedBox(
@@ -70,9 +64,7 @@ class LandingPage extends StatelessWidget {
                         "2019",
                         style: TextStyle(
                           fontSize: 40,
-                          color: Theme
-                              .of(context)
-                              .accentColor,
+                          color: Theme.of(context).accentColor,
                         ),
                       ),
                     ],
@@ -86,30 +78,12 @@ class LandingPage extends StatelessWidget {
                 shrinkWrap: true,
                 crossAxisCount: 2,
                 children: <Widget>[
-                  ColorTile(
-                      "Events",
-                      Theme
-                          .of(context)
-                          .primaryColor,
-                      Icons.music_note,
-                      0),
-                  ColorTile(
-                      "Venues",
-                      Theme
-                          .of(context)
-                          .accentColor,
-                      Icons.account_balance,
-                      1),
-                  ColorTile(
-                      "Your Planner",
-                      Colors.green,
-                      Icons.book,
-                      2),
-                  ColorTile(
-                      "Social Media",
-                      Colors.blue,
-                      Icons.settings,
-                      3)
+                  ColorTile("Events", Theme.of(context).primaryColor,
+                      Icons.music_note, 0),
+                  ColorTile("Venues", Theme.of(context).accentColor,
+                      Icons.account_balance, 1),
+                  ColorTile("Your Planner", Colors.green, Icons.book, 2),
+                  ColorTile("Social Media", Colors.blue, Icons.settings, 3)
                 ],
               )
             ],
@@ -135,7 +109,9 @@ class ColorTile extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (ctx) => BottomNavigationManager(initialPage: page,)));
+              builder: (ctx) => BottomNavigationManager(
+                    initialPage: page,
+                  )));
         },
         child: Material(
           color: color,

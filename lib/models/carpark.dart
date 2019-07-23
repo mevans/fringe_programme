@@ -1,7 +1,8 @@
+import 'package:fringe_programme/models/fringe_location.dart';
 import 'package:latlong/latlong.dart';
 
-class CarPark{
-  String name;
-  LatLng location;
-  CarPark(this.name, this.location);
+class CarPark extends FringeLocation {
+  final String name;
+
+  CarPark(this.name, LatLng location) : super(location: location);
 }

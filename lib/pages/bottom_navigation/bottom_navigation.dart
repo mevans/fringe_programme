@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fringe_programme/models/event.dart';
 import 'package:fringe_programme/pages/event_list_page/event_page_filter.dart';
 import 'package:fringe_programme/pages/event_list_page/event_list_page.dart';
+import 'package:fringe_programme/pages/event_page/event_page.dart';
 import 'package:fringe_programme/pages/fringe_2019/fringe_2019_page.dart';
 import 'package:fringe_programme/pages/planner_page/planner_page.dart';
-import 'package:fringe_programme/pages/venues/venues_map_page.dart';
+import 'package:fringe_programme/pages/map_page/map_page.dart';
+import 'package:fringe_programme/database_helper.dart';
 
 class BottomNavigationManager extends StatefulWidget {
   final int initialPage;
@@ -43,6 +48,15 @@ class _BottomNavigationManagerState extends State<BottomNavigationManager> {
 
   @override
   Widget build(BuildContext context) {
+    var initializationSettingsAndroid = new AndroidInitializationSettings('ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    Future onSelectNotification(String p)async {
+      Firestore.instance.collection("events2019").document(p).get().then((ds) {
+        Navigator.push(context, MaterialPageRoute(builder: (ctx) => EventPage(Event.fromDocument(ds))));
+      });
+    }
+    DatabaseHelper.flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
     return Scaffold(
       body: PageView(
           controller: controller,
