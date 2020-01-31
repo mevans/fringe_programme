@@ -10,21 +10,21 @@ description: A new Flutter project.
 version: 1.1.6+20602019
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   cloud_firestore: 0.12.6
-  flutter_map: 0.5.0+1
-  path_provider: 0.5.0+1
+  flutter_map: 0.8.2
+  path_provider: ^1.5.1
   url_launcher: ^4.0.2
-  rapido: ^0.1.7
+  rapido: ^0.2.1
   flutter_launcher_icons: "^0.7.0"
   scoped_model: 1.0.1
   share: 0.6.0
   flutter_local_notifications: ^0.4.5
-  cached_network_image: ^0.7.0
+  cached_network_image: 2.0.0
 
 
 dev_dependencies:

@@ -9,8 +9,7 @@ import 'package:fringe_programme/database_helper.dart';
 import 'package:fringe_programme/pages/event_page/event_page.dart';
 import 'package:fringe_programme/widgets/home_page.dart';
 
-void main() async {
-  await Firestore.instance.settings(timestampsInSnapshotsEnabled: true, persistenceEnabled: true);
+void main() {
   runApp(
     MaterialApp(
       title: "Shaftesbury Fringe 2019",

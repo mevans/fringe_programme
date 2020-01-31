@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fringe_programme/pages/bottom_navigation/bottom_navigation.dart';
 
@@ -6,6 +8,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       fit: StackFit.expand,
+      overflow: Overflow.clip,
       children: <Widget>[
         Image.asset(
           "assets/home_screen/background.jpg",
@@ -41,14 +44,10 @@ class HomePage extends StatelessWidget {
                   },
                   child: Container(
                     color: Colors.white.withOpacity(0.3),
-                    padding: EdgeInsets.only(
-                        left: 32, top: 12, right: 16, bottom: 12),
+                    padding: EdgeInsets.only(left: 32, top: 12, right: 16, bottom: 12),
                     child: Text(
                       "Events",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -59,44 +58,34 @@ class HomePage extends StatelessWidget {
                     children: <Widget>[
                       InkWell(
                         onTap: () {
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                                  builder: (ctx) => BottomNavigationManager(
-                                        initialPage: 1,
-                                      )));
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (ctx) => BottomNavigationManager(
+                                    initialPage: 1,
+                                  )));
                         },
                         child: Container(
                           color: Colors.white.withOpacity(0.3),
-                          padding: EdgeInsets.only(
-                              left: 32, top: 12, right: 16, bottom: 12),
+                          padding: EdgeInsets.only(left: 32, top: 12, right: 16, bottom: 12),
                           child: Text(
                             "Map",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                       SizedBox(height: 20),
                       InkWell(
                         onTap: () {
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                                  builder: (ctx) => BottomNavigationManager(
-                                        initialPage: 2,
-                                      )));
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (ctx) => BottomNavigationManager(
+                                    initialPage: 2,
+                                  )));
                         },
                         child: Container(
                           color: Colors.white.withOpacity(0.3),
-                          padding: EdgeInsets.only(
-                              left: 32, top: 12, right: 16, bottom: 12),
+                          padding: EdgeInsets.only(left: 32, top: 12, right: 16, bottom: 12),
                           child: Text(
                             "Planner",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
